@@ -1,19 +1,11 @@
-@Library("mylibs") _
-pipeline {
-  agent any
-  tools {
-    maven 'maven2'
+node{
+  stage('SCM Checkout'){
+    
+    git 'https://github.com/charpitha-1/my-app-1.git'
   }
-  stages{
-    stage("Maven Build"){
-      steps{
-        sh "mvn clean package"
-      }
-    }
-    stage("Deploy To Dev"){
-      steps{
-        tomcatDeploy("tomcat-dev","ec2-user",["172.31.13.89","172.31.13.89"])
-      }
-    }
+  stage('Compile-Package'){
+    //Get maven home path
+    def mvnhome = tool name: 'M2_HOME', type: 'maven'
+    sh "${mvnhome}/bin/mvn package"
   }
 }
